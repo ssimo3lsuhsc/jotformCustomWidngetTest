@@ -1,4 +1,4 @@
-import locale, re
+import re
 
 from bs4 import BeautifulSoup, Tag
 
@@ -6,7 +6,6 @@ current_tag_match = None
 
 
 def main():
-    locale.setlocale(locale.LC_ALL, "en-US")
     with open("ehs_scholarship_application.html", "r+", encoding="utf-8") as scholarship_application:
         scholarship_application_soup = BeautifulSoup(scholarship_application, "html.parser")
         inputTag = scholarship_application_soup.find(match_input)
@@ -25,6 +24,7 @@ def main():
                 " my monthly income is ",
                 second_strong_tag
             ])
+            inputTag = label_tag.find_next(match_input)
 
         scholarship_application.seek(0, 0)
         scholarship_application.truncate(0)
@@ -33,6 +33,7 @@ def main():
 
 
 def match_input(tag: Tag):
+    global current_tag_match
     if tag.name.lower() != "input" or tag["type"].lower() != "radio":
         return False
     current_tag_match = re.match(r"^For (?P<article>an?) (?P<first_strong>(?P<household_size>\d+)-person household,) my monthly income is (?P<second_strong>\$(?P<max_monthly_income>\d{1,3}(?:,\d{3})*) or less.)$", tag["value"])
