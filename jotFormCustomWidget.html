@@ -18,18 +18,25 @@
         function onloadCallback() {
             JFCustomWidget.subscribe("ready", function(formId, value) {
              if (value) {
-                 let value_found = false
-                 let input_elements = document.getElementsByTagName("input");
-                 for (let i = 0; i < input_elements.length && !value_found; i++) {
-                     if (input_elements[i].getAttribute("value") === value) {
-                         input_elements[i].checked = true;
-                         value_found = true;
+                 if (value) {
+                     let input_element = document.querySelector("input[value=" + value + "]")
+                     if (input_element) {
+                         input_element.checked = true;
                      }
                  }
+
              }
             });
             JFCustomWidget.subscribe("submit", function() {
-                let valid = false;
+                let checkedElement = document.querySelector(":checked");
+                let result = {
+                    valid: !!checkedElement
+                }
+                if (checkedElement) {
+                    result.value = checkedElement.getAttribute('value');
+                }
+                JFCustomWidget.sendSubmit(result);
+
 
             })
         }
