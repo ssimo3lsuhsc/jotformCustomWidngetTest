@@ -39,13 +39,15 @@ def main():
             HouseholdIncomeLimit(8, 7994, "an"),
             HouseholdIncomeLimit(9, 8168)
         ]:
-            fieldset.append(customWidgetSoup.new_tag("input", attrs={
+            div = customWidgetSoup.new_tag("div");
+
+            div.append(customWidgetSoup.new_tag("input", attrs={
                 "name": "household_income",
                 "id": "household_income_" + str(input_index),
                 "type": "radio",
                 "value": "For " + householdIncomeLimit.article + " " + str(householdIncomeLimit.household_size) + "-person household, my monthly income is $" + locale.format_string("%d", householdIncomeLimit.max_income, grouping=True, monetary=True) + " or less."
             }))
-            fieldset.append(" ")
+            div.append(" ")
             label = customWidgetSoup.new_tag("label", attrs={
                 "for": "household_income_" + str(input_index)
             })
@@ -57,7 +59,8 @@ def main():
             second_strong = customWidgetSoup.new_tag("strong")
             second_strong.append(locale.format_string("$%d or less.", householdIncomeLimit.max_income, grouping=True, monetary=True))
             label.append(second_strong)
-            fieldset.append(label)
+            div.append(label)
+            fieldset.append(div)
             fieldset.append("\r\n    ")
             input_index += 1
         fieldset.append(customWidgetSoup.new_tag("input", attrs={
